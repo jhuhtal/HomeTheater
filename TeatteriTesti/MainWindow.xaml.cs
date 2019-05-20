@@ -32,6 +32,7 @@ namespace Teatteri
 
         public MainWindow()
         {
+            App.Current.Shutdown();            //delete
             WindowState = WindowState.Maximized;                   
             WindowStyle = WindowStyle.None;
 
