@@ -22,15 +22,15 @@ namespace Teatteri
 
         public DataBaseManager()    //create db and tables
         {
-            if (File.Exists(@"D:\Tekstitiedostot\Ohjelmointi\Teatteri\Movies.sqlite") == true)
+            if (File.Exists(@"Movies.sqlite") == true)
             {
-                mConnection = new SQLiteConnection(@"Data Source=D:\Tekstitiedostot\Ohjelmointi\Teatteri\Movies.sqlite;Version=3;");
+                mConnection = new SQLiteConnection(@"Data Source=Movies.sqlite;Version=3;");
             }
             else
             {
-                SQLiteConnection.CreateFile(@"D:\Tekstitiedostot\Ohjelmointi\Teatteri\Movies.sqlite");
+                SQLiteConnection.CreateFile(@"Movies.sqlite");
 
-                mConnection = new SQLiteConnection(@"Data Source=D:\Tekstitiedostot\Ohjelmointi\Teatteri\Movies.sqlite;Version=3;");
+                mConnection = new SQLiteConnection(@"Data Source=Movies.sqlite;Version=3;");
                 mConnection.Open();
 
                 string sql = "CREATE TABLE movies(movie_id varchar(15) NOT NULL, original_title varchar(45) NOT NULL, overview varchar(1000), vote_average varchar(5), " +
@@ -139,17 +139,17 @@ namespace Teatteri
 
         private void InitializeGenres()
         {
-            if (File.Exists(@"D:\Tekstitiedostot\Ohjelmointi\Teatteri\JSON\genres.json") == false)
+            if (File.Exists(@"\JSON\genres.json") == false)
             {
                 WebClient client = new WebClient();
                 System.Uri uri = new System.Uri("https://api.themoviedb.org/3/genre/movie/list?api_key=6c0882a144f6f064e6dd0a67876c9095&language=en-US");
-                client.DownloadFile(uri, @"D:\Tekstitiedostot\Ohjelmointi\Teatteri\JSON\genres.json");
+                client.DownloadFile(uri, @"\JSON\genres.json");
             }
-            GenreJSON genreJSON = JsonConvert.DeserializeObject<GenreJSON>(File.ReadAllText(@"D:\Tekstitiedostot\Ohjelmointi\Teatteri\JSON\genres.json"));
+            GenreJSON genreJSON = JsonConvert.DeserializeObject<GenreJSON>(File.ReadAllText(@"\JSON\genres.json"));
 
             foreach (Genre genre in genreJSON.genres)
             {
-                SQLiteConnection mConnection = new SQLiteConnection(@"Data Source=D:\Tekstitiedostot\Ohjelmointi\Teatteri\Movies.sqlite;Version=3;");
+                SQLiteConnection mConnection = new SQLiteConnection(@"Movies.sqlite;Version=3;");
                 mConnection.Open();
 
                 string sql = "INSERT INTO genrenames (genre_id, name) VALUES ('" + genre.id + "', '" + genre.name + "')";
@@ -163,7 +163,7 @@ namespace Teatteri
         {
             ObservableCollection<Movie> movieList = new ObservableCollection<Movie>();
 
-            mConnection = new SQLiteConnection(@"Data Source=D:\Tekstitiedostot\Ohjelmointi\Teatteri\Movies.sqlite;Version=3;");
+            mConnection = new SQLiteConnection(@"Data Source=Movies.sqlite;Version=3;");
             mConnection.Open();
 
             string sql = "SELECT * FROM movies";
@@ -233,7 +233,7 @@ namespace Teatteri
 
             try
             {
-                SQLiteConnection mConnection = new SQLiteConnection(@"Data Source=D:\Tekstitiedostot\Ohjelmointi\Teatteri\Movies.sqlite;Version=3;");
+                SQLiteConnection mConnection = new SQLiteConnection(@"Data Source=Movies.sqlite;Version=3;");
                 mConnection.Open();
                 string sql = @"INSERT INTO movies (movie_id, original_title, overview, vote_average, release_date, director, runtime, filepath) VALUES ('" + mov.Id + "', '" + mov.Original_title +
                     "', '" + mov.Overview + "', '" + mov.Vote_average.ToString() + "', '" + mov.Release_date + "', '" + mov.Crew[0].name + "', '" + mov.Runtime + "', '" + mov.FilePath + "')";
